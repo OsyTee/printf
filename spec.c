@@ -3,7 +3,6 @@
 /**
  * get_specifier - finds the format func
  * @s: the format string
- *
  * Return: the number of bytes printed
  */
 int (*get_specifier(char *s))(va_list ap, params_t *params)
@@ -26,7 +25,8 @@ int (*get_specifier(char *s))(va_list ap, params_t *params)
 		{NULL, NULL}
 	};
 	int count;
-	count= 0;
+
+	count = 0;
 
 	while (specifiers[count].specifier)
 	{
@@ -44,7 +44,6 @@ int (*get_specifier(char *s))(va_list ap, params_t *params)
  * @s: the format string
  * @ap: argument pointer
  * @params: the parameters struct
- *
  * Return: the number of bytes printed
  */
 int get_print_func(char *s, va_list ap, params_t *params)
@@ -60,7 +59,6 @@ int get_print_func(char *s, va_list ap, params_t *params)
  * get_flag - finds the flag func
  * @s: the format string
  * @params: the parameters struct
- *
  * Return: if flag was valid
  */
 int get_flag(char *s, params_t *params)
@@ -120,6 +118,7 @@ int get_modifier(char *s, params_t *params)
  * Return: new pointer
  */
 char *get_width(char *s, params_t *params, va_list ap)
+
 /* should this function use char **s and modify the pointer? */
 {
 	int gg = 0;
