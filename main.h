@@ -35,6 +35,7 @@
  *
  */
 typedef struct parameters
+
 {
 	unsigned int unsign		: 1;
 
@@ -49,6 +50,7 @@ typedef struct parameters
 
 	unsigned int h_modifier		: 1;
 	unsigned int l_modifier		: 1;
+
 } params_t;
 
 /**
