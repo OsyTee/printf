@@ -1,49 +1,51 @@
 #include "main.h"
 
 /**
- * _printf - prints anything
- * @format: the format string
+ * _printf - formatted output conversion and print data.
+ * @format: input string.
  *
- * Return: number of bytes printed
+ * Return: number of chars printed.
  */
 int _printf(const char *format, ...)
 {
-	int amg = 0;
-	va_list pa;
-	char *p, *start;
-	params_t params = PARAMS_INIT;
+	unsigned int i = 0, len = 0, ibuf = 0;
+	va_list arguments;
+	int (*function)(va_list, char *, unsigned int);
+	char *buffer;
 
-	va_start(pa, format);
-
-	if (!format || (format[0] == '%' && !format[1]))
+	va_start(arguments, format), buffer = malloc(sizeof(char) * 1024);
+	if (!format || !buffer || (format[i] == '%' && !format[i + 1]))
 		return (-1);
-	if (format[0] == '%' && format[1] == ' ' && !format[2])
-		return (-1);
-	for (p = (char *)format; *p; p++)
+	if (!format[i])
+		return (0);
+	for (i = 0; format && format[i]; i++)
 	{
-		init_params(&params, pa);
-		if (*p != '%')
+		if (format[i] == '%')
 		{
-			amg += _putchar(*p);
-			continue;
+			if (format[i + 1] == '\0')
+			{	print_buf(buffer, ibuf), free(buffer), va_end(arguments);
+				return (-1);
+			}
+			else
+			{	function = get_print_func(format, i + 1);
+				if (function == NULL)
+				{
+					if (format[i + 1] == ' ' && !format[i + 2])
+						return (-1);
+					handl_buf(buffer, format[i], ibuf), len++, i--;
+				}
+				else
+				{
+					len += function(arguments, buffer, ibuf);
+					i += ev_print_func(format, i + 1);
+				}
+			} i++;
 		}
-		start = p;
-		p++;
-		while (get_flag(p, &params)) /* while char at p is flag char */
-		{
-			p++; /* next char */
-		}
-		p = get_width(p, &params, pa);
-		p = get_precision(p, &params, pa);
-		if (get_modifier(p, &params))
-			p++;
-		if (!get_specifier(p))
-			amg += print_from_to(start, p,
-				params.l_modifier || params.h_modifier ? p - 1 : 0);
 		else
-			amg += get_print_func(p, pa, &params);
+			handl_buf(buffer, format[i], ibuf), len++;
+		for (ibuf = len; ibuf > 1024; ibuf -= 1024)
+			;
 	}
-	_putchar(BUF_FLUSH);
-	va_end(pa);
-	return (amg);
+	print_buf(buffer, ibuf), free(buffer), va_end(arguments);
+	return (len);
 }
